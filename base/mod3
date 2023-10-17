@@ -36,7 +36,7 @@ public class Main {
         int age = Integer.parseInt(scanner.nextLine());
 
         List<String> hobbies = new ArrayList<>();
-        System.out.print("Введите хобби (разделите через запятую): ");
+        System.out.print("Введите хобби разделите через запятую: ");
         String hobbiesInput = scanner.nextLine();
         String[] hobbyArray = hobbiesInput.split(",");
         for (String hobby : hobbyArray) {
