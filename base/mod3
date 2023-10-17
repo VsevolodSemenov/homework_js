@@ -1,0 +1,65 @@
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class User implements Serializable {
+    private String name;
+    private String username;
+    private int age;
+    private List<String> hobbies;
+
+    public User(String name, String username, int age, List<String> hobbies) {
+        this.name = name;
+        this.username = username;
+        this.age = age;
+        this.hobbies = hobbies;
+    }
+
+
+    @Override
+    public String toString() {
+        String hobbiesString = String.join("\n", hobbies);
+        return "Пользоваетель: " + name + " с логином: " + username +". " + "Его возраст: " + age + ". " + "Все хобби: " + "\n" + hobbiesString;
+    }
+    }
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Введите ваше имя: ");
+        String name = scanner.nextLine();
+        System.out.print("Введите ваш логин: ");
+        String username = scanner.nextLine();
+        System.out.print("Введите ваш возраст: ");
+        int age = Integer.parseInt(scanner.nextLine());
+
+        List<String> hobbies = new ArrayList<>();
+        System.out.print("Введите хобби (разделите через запятую): ");
+        String hobbiesInput = scanner.nextLine();
+        String[] hobbyArray = hobbiesInput.split(",");
+        for (String hobby : hobbyArray) {
+            hobbies.add(hobby.trim());
+        }
+
+        User user = new User(name, username, age, hobbies);
+
+        try (FileOutputStream fileOut = new FileOutputStream("user_data.ser");
+             ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
+            out.writeObject(user);
+            System.out.println("Данные пользователя были сериализованы в файл user_data.ser.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try (FileInputStream fileIn = new FileInputStream("user_data.ser");
+             ObjectInputStream in = new ObjectInputStream(fileIn)) {
+            User deserializedUser = (User) in.readObject();
+            System.out.println("\nИнформация о пользователе:");
+            System.out.println(deserializedUser);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+}
